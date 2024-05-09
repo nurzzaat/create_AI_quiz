@@ -15,7 +15,7 @@ import (
 //	@description	This is a sample server celler server.
 
 //	@host		77.240.39.57
-//	@BasePath	/
+//	@BasePath	/ai
 
 // @securityDefinitions.apikey	ApiKeyAuth
 // @in							header

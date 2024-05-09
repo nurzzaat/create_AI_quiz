@@ -7,7 +7,7 @@
         "version": "1.0"
     },
     "host": "77.240.39.57",
-    "basePath": "/",
+    "basePath": "/ai",
     "paths": {
         "/accountrecovery/{email}/{hash_pass}": {
             "post": {

@@ -1,4 +1,4 @@
-basePath: /
+basePath: /ai
 definitions:
   models.ErrorDetail:
     properties:
