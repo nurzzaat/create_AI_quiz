@@ -39,6 +39,36 @@ definitions:
       additionalProp3:
         type: string
     type: object
+  models.Question:
+    properties:
+      correctAnswer:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      variants:
+        items:
+          $ref: '#/definitions/models.Variant'
+        type: array
+    type: object
+  models.Quiz:
+    properties:
+      countOfQuestion:
+        type: integer
+      id:
+        type: integer
+      isPassed:
+        type: boolean
+      passedCount:
+        type: integer
+      questions:
+        items:
+          $ref: '#/definitions/models.Question'
+        type: array
+      title:
+        type: string
+    type: object
   models.SuccessResponse:
     properties:
       metadata:
@@ -74,6 +104,11 @@ definitions:
         type: string
       roleId:
         type: integer
+    type: object
+  models.Variant:
+    properties:
+      title:
+        type: string
     type: object
 host: 77.240.39.57
 info:
@@ -157,6 +192,108 @@ paths:
       summary: LogOut
       tags:
       - auth
+  /quiz:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: quiz
+        in: body
+        name: quiz
+        required: true
+        schema:
+          $ref: '#/definitions/models.Quiz'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - Quiz
+  /quiz/admin/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - Quiz
+  /quiz/generate:
+    post:
+      parameters:
+      - description: text
+        in: formData
+        name: text
+        required: true
+        type: string
+      - description: count
+        in: formData
+        name: count
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - Quiz
+  /quiz/user/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - Quiz
   /reset-password:
     post:
       consumes:
