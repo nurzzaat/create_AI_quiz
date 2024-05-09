@@ -1,0 +1,104 @@
+*:not(a) {
+    color: #fff !important;
+}
+
+html,
+body {
+    max-width: 100%;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 24px;
+}
+
+body {
+    font-family: Geologica, sans-serif;
+    padding: 0px 20px 20dvh;
+}
+
+h1 {
+    font-weight: 600;
+    font-size: 24px;
+}
+
+h2 {
+    font-weight: 600;
+    font-size: 20px;
+}
+
+h3 {
+    font-weight: 500;
+    font-size: 18px;
+}
+
+h4,
+h5,
+h6 {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+li {
+    padding-bottom: 8px;
+}
+
+body a {
+    color: #f0b537 !important;
+}
+
+.media {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 0;
+    margin: 12px 0;
+}
+
+blockquote {
+    font-style: italic;
+    color: #f0b537;
+    padding: 1.2em 30px 1.2em 55px;
+    border-left: 8px solid #f0b537;
+    line-height: 1.6;
+    position: relative;
+    background: rgba(0, 0, 0, 0.3);
+    margin: 0;
+}
+
+blockquote::before {
+    font-family: Arial;
+    content: "\201C";
+    color: #f0b537;
+    font-size: 4em;
+    position: absolute;
+    left: 10px;
+    top: -10px;
+}
+
+table,
+th,
+td {
+    border: 1px solid #fff;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 4px 8px;
+}
+
+table {
+    border-radius: 16px;
+}
+
+.table {
+    margin: 12px 0;
+    position: relative;
+    max-width: 100%;
+    overflow: auto;
+}
