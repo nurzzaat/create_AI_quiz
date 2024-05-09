@@ -21,9 +21,10 @@ func (ur *UserRepository) CreateUser(c context.Context, user models.UserRequest)
 	currentTime := time.Now().Format("2006-01-02 15:04:05")
 	userQuery := `INSERT INTO users(
 		email, password, firstname, lastname, createdat , roleid)
-		VALUES ($1, $2, $3, $4, $5) returning id;`
-	err := ur.db.QueryRow(c, userQuery, user.Email, user.Password, currentTime, user.RoleID).Scan(&userID)
+		VALUES ($1, $2, $3, $4, $5 , $6) returning id;`
+	err := ur.db.QueryRow(c, userQuery, user.Email, user.Password,user.FirstName , user.LastName, currentTime, user.RoleID).Scan(&userID)
 	if err != nil {
+
 		return 0, err
 	}
 	return userID, nil
