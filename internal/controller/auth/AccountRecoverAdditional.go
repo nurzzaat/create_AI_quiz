@@ -6,18 +6,18 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/nurzzaat/ZharasDiplom/internal/models"
+	"github.com/nurzzaat/create_AI_quiz/internal/models"
 )
 
-//	@Summary	Account Recovery
-//	@Tags		auth
-//	@Param		email			path		string	true	"User email"
-//	@Param		hash_pass		path		string	true	"User's hashed password"
-//	@Param		password		formData	string	true	"New password"
-//	@Param		confirmPassword	formData	string	true	"Confirm new password"
-//	@Success	200				{object}	models.SuccessResponse
-//	@Failure	400				{object}	models.ErrorResponse
-//	@Router		/accountrecovery/{email}/{hash_pass} [post]
+// @Summary	Account Recovery
+// @Tags		auth
+// @Param		email			path		string	true	"User email"
+// @Param		hash_pass		path		string	true	"User's hashed password"
+// @Param		password		formData	string	true	"New password"
+// @Param		confirmPassword	formData	string	true	"Confirm new password"
+// @Success	200				{object}	models.SuccessResponse
+// @Failure	400				{object}	models.ErrorResponse
+// @Router		/accountrecovery/{email}/{hash_pass} [post]
 func (pc *AuthController) AccountRecovery(c *gin.Context) {
 	email := c.Param("email")
 	password := c.Param("hash_pass")

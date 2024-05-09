@@ -1,22 +1,23 @@
 package auth
 
 import (
-	"golang.org/x/crypto/bcrypt"
 	"net/http"
 
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/gin-gonic/gin"
-	"github.com/nurzzaat/ZharasDiplom/internal/models"
+	"github.com/nurzzaat/create_AI_quiz/internal/models"
 )
 
-//	@Summary	Reset password
-//	@Security	ApiKeyAuth
-//	@Tags		auth
-//	@Accept		json
-//	@Produce	json
-//	@Param		reset	body		models.Password	true	"Change password"
-//	@Success	200		{object}	models.SuccessResponse
-//	@Failure	400		{object}	models.ErrorResponse
-//	@Router		/reset-password [post]
+// @Summary	Reset password
+// @Security	ApiKeyAuth
+// @Tags		auth
+// @Accept		json
+// @Produce	json
+// @Param		reset	body		models.Password	true	"Change password"
+// @Success	200		{object}	models.SuccessResponse
+// @Failure	400		{object}	models.ErrorResponse
+// @Router		/reset-password [post]
 func (pc *AuthController) ResetPassword(c *gin.Context) {
 	userID := c.GetUint("userID")
 	var passwords models.Password
@@ -75,7 +76,7 @@ func (pc *AuthController) ResetPassword(c *gin.Context) {
 		return
 	}
 
-	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(passwords.Password),bcrypt.DefaultCost)
+	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(passwords.Password), bcrypt.DefaultCost)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{
 			Result: []models.ErrorDetail{
@@ -90,7 +91,7 @@ func (pc *AuthController) ResetPassword(c *gin.Context) {
 
 	passwords.Password = string(encryptedPassword)
 
-	err = pc.UserRepository.SetUserPassword(c , passwords.Password , int(userID))
+	err = pc.UserRepository.SetUserPassword(c, passwords.Password, int(userID))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{
 			Result: []models.ErrorDetail{

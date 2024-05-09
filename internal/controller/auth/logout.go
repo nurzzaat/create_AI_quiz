@@ -8,20 +8,22 @@ import (
 
 	"github.com/gin-gonic/gin"
 	jwt "github.com/golang-jwt/jwt/v4"
-	"github.com/nurzzaat/ZharasDiplom/internal/models"
+	"github.com/nurzzaat/create_AI_quiz/internal/models"
 )
 
 //	@Summary	LogOut
 //	@Tags		auth
 //	@Accept		json
 //	@Produce	json
+//
 // @Security	ApiKeyAuth
+//
 //	@Success	200		{object}	models.SuccessResponse
 //	@Failure	default	{object}	models.ErrorResponse
 //	@Router		/logout [post]
 func (lc *AuthController) Logout(c *gin.Context) {
 	tokenString := c.GetHeader("Authorization")
-	
+
 	splitToken := strings.Split(tokenString, " ")
 	if len(splitToken) != 2 {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{

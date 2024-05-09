@@ -1,4 +1,4 @@
-module github.com/nurzzaat/ZharasDiplom
+module github.com/nurzzaat/create_AI_quiz
 
 go 1.20
 
@@ -8,6 +8,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/jackc/pgx/v4 v4.18.3
 	github.com/pkg/errors v0.9.1
+	github.com/sashabaranov/go-openai v1.23.1
 	github.com/spf13/viper v1.18.2
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0

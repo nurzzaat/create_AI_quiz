@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/nurzzaat/ZharasDiplom/internal/models"
+	"github.com/nurzzaat/create_AI_quiz/internal/models"
 )
 
 type UserController struct {

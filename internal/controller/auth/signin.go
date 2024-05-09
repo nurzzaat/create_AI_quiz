@@ -4,19 +4,19 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/nurzzaat/ZharasDiplom/internal/controller/tokenutil"
-	"github.com/nurzzaat/ZharasDiplom/internal/models"
+	"github.com/nurzzaat/create_AI_quiz/internal/controller/tokenutil"
+	"github.com/nurzzaat/create_AI_quiz/internal/models"
 	"golang.org/x/crypto/bcrypt"
 )
 
-//	@Summary	SignIn
-//	@Tags		auth
-//	@Accept		json
-//	@Produce	json
-//	@Param		input	body		models.LoginRequest	true	"login"
-//	@Success	200		{object}	models.SuccessResponse
-//	@Failure	default	{object}	models.ErrorResponse
-//	@Router		/signin [post]
+// @Summary	SignIn
+// @Tags		auth
+// @Accept		json
+// @Produce	json
+// @Param		input	body		models.LoginRequest	true	"login"
+// @Success	200		{object}	models.SuccessResponse
+// @Failure	default	{object}	models.ErrorResponse
+// @Router		/signin [post]
 func (lc *AuthController) Signin(c *gin.Context) {
 	var loginRequest models.LoginRequest
 

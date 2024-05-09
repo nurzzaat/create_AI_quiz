@@ -3,18 +3,21 @@ package models
 import "context"
 
 type User struct {
-	ID          uint   `json:"id"`
-	Email       string `json:"email"`
-	Password    string `json:"password,omitempty"`
-	PhoneNumber string `json:"phoneNumber"`
-	RoleID      uint   `json:"roleId"`
-	CreatedAt   string `json:"createdAt"`
+	ID        uint   `json:"id"`
+	Email     string `json:"email"`
+	Password  string `json:"password,omitempty"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	RoleID    uint   `json:"roleId"`
+	CreatedAt string `json:"createdAt"`
 }
 
 type UserRequest struct {
-	Email       string `json:"email"`
-	Password    string `json:"password"`
-	PhoneNumber string `json:"phoneNumber"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	RoleID    uint   `json:"roleId"`
 }
 
 type LoginRequest struct {

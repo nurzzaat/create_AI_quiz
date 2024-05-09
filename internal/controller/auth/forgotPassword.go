@@ -8,15 +8,15 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/nurzzaat/ZharasDiplom/internal/models"
+	"github.com/nurzzaat/create_AI_quiz/internal/models"
 )
 
-//	@Summary	Forgot Password
-//	@Tags		auth
-//	@Param		email	formData	string	true	"Email address"
-//	@Success	200		{object}	models.SuccessResponse
-//	@Failure	400		{object}	models.ErrorResponse
-//	@Router		/forgot-password [post]
+// @Summary	Forgot Password
+// @Tags		auth
+// @Param		email	formData	string	true	"Email address"
+// @Success	200		{object}	models.SuccessResponse
+// @Failure	400		{object}	models.ErrorResponse
+// @Router		/forgot-password [post]
 func (pc *AuthController) ForgotPassword(c *gin.Context) {
 	email := c.PostForm("email")
 
@@ -35,7 +35,7 @@ func (pc *AuthController) ForgotPassword(c *gin.Context) {
 
 	password := GenerateRandomPassword(12)
 
-	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(password),bcrypt.DefaultCost)
+	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{
 			Result: []models.ErrorDetail{

@@ -10,9 +10,9 @@ import (
 
 	emailverifier "github.com/AfterShip/email-verifier"
 	"github.com/gin-gonic/gin"
-	"github.com/nurzzaat/ZharasDiplom/internal/controller/tokenutil"
-	"github.com/nurzzaat/ZharasDiplom/internal/models"
-	"github.com/nurzzaat/ZharasDiplom/pkg"
+	"github.com/nurzzaat/create_AI_quiz/internal/controller/tokenutil"
+	"github.com/nurzzaat/create_AI_quiz/internal/models"
+	"github.com/nurzzaat/create_AI_quiz/pkg"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -51,7 +51,7 @@ func (uc *AuthController) Signup(c *gin.Context) {
 	verifier = verifier.EnableSMTPCheck()
 	verifier = verifier.EnableDomainSuggest()
 
-	if request.Email == "" || request.Password == "" || request.PhoneNumber == "" {
+	if request.Email == "" || request.Password == "" || request.FirstName != "" || request.LastName != "" {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{
 			Result: []models.ErrorDetail{
 				{
@@ -64,9 +64,9 @@ func (uc *AuthController) Signup(c *gin.Context) {
 	}
 
 	ret, _ := verifier.Verify(request.Email)
-	
+
 	log.Println(ret.Reachable)
-	
+
 	if !ret.Syntax.Valid {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{
 			Result: []models.ErrorDetail{
@@ -204,8 +204,8 @@ func validatePassword(password string) error {
 			hasLower = true
 		case unicode.IsDigit(char):
 			hasDigit = true
-		// case unicode.IsPunct(char) || unicode.IsSymbol(char):
-		// 	hasSpecial = true
+			// case unicode.IsPunct(char) || unicode.IsSymbol(char):
+			// 	hasSpecial = true
 		}
 	}
 	if !hasUpper || !hasLower || !hasDigit {

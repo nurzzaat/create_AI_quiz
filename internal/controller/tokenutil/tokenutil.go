@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	models "github.com/nurzzaat/ZharasDiplom/internal/models"
+	models "github.com/nurzzaat/create_AI_quiz/internal/models"
 
 	"errors"
 	"strings"
