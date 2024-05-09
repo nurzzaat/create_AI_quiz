@@ -51,7 +51,7 @@ func (uc *AuthController) Signup(c *gin.Context) {
 	verifier = verifier.EnableSMTPCheck()
 	verifier = verifier.EnableDomainSuggest()
 
-	if request.Email == "" || request.Password == "" || request.FirstName != "" || request.LastName != "" {
+	if request.Email == "" || request.Password == "" || request.FirstName == "" || request.LastName == "" {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{
 			Result: []models.ErrorDetail{
 				{
