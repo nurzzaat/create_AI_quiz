@@ -45,16 +45,37 @@ definitions:
         $ref: '#/definitions/models.Properties'
       result: {}
     type: object
+  models.User:
+    properties:
+      createdAt:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: integer
+      lastName:
+        type: string
+      password:
+        type: string
+      roleId:
+        type: integer
+    type: object
   models.UserRequest:
     properties:
       email:
         type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
       password:
         type: string
-      phoneNumber:
-        type: string
+      roleId:
+        type: integer
     type: object
-host: localhost:1232
+host: 77.240.39.57
 info:
   contact: {}
   description: This is a sample server celler server.
@@ -217,6 +238,31 @@ paths:
     get:
       consumes:
       - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
       produces:
       - application/json
       responses:
