@@ -34,6 +34,15 @@ create table results(
 	quizid integer,
 	answer text default '',
 	ball int default 0,
+	Primary key(userid , quizid),
 	foreign key (quizid) references quizes(id) on delete cascade,
 	foreign key (userid) references users(id) on delete cascade
+);
+
+create table quizaccess(
+	quizid int ,
+	userid int,
+	Primary key(userid , quizid),
+	foreign key (userid) references users(id) on delete cascade,
+	foreign key (quizid) references quizes(id) on delete cascade
 );

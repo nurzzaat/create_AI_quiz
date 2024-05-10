@@ -51,14 +51,15 @@ func Setup(app pkg.Application, router *gin.Engine) {
 
 	quizRouter := router.Group("/quiz")
 	{
-		quizRouter.POST("" , quizController.Create)//create
-		quizRouter.POST("/generate" , quizController.Generate)//generate
-		quizRouter.GET("" )//getall
+		quizRouter.POST("" , quizController.Create)
+		quizRouter.POST("/generate" , quizController.Generate)
 		quizRouter.GET("/admin/:id" , quizController.GetByIDAdmin)
 		quizRouter.GET("/user/:id" , quizController.GetByIDUser)
-		quizRouter.DELETE("/:id" )
+		quizRouter.GET("/admin" , quizController.GetAllAdmin)
+		quizRouter.GET("/user" , quizController.GetAllUser)
+		quizRouter.DELETE("/:id" , quizController.Delete)
 
-		quizRouter.POST("/:id" )//submit student
+		quizRouter.POST("/submit/:id" , quizController.Submit )//submit student
 	}
 	studentRouter := router.Group("/students")
 	{

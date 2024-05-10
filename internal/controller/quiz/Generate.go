@@ -81,8 +81,15 @@ func (qc *QuizController) Generate(c *gin.Context) {
 
 	err = json.Unmarshal([]byte(resp.Choices[0].Message.Content), &response)
     if err != nil {
-        fmt.Println("Error:", err)
-        return
+        c.JSON(http.StatusBadRequest, models.ErrorResponse{
+			Result: []models.ErrorDetail{
+				{
+					Code:    "ERROR_BIND_RESPONSE",
+					Message: "Couldn't bind data from openAI. Please , regenerate it again to get correct values.",
+				},
+			},
+		})
+		return
     }
 
 	c.JSON(http.StatusOK, models.SuccessResponse{Result: response})

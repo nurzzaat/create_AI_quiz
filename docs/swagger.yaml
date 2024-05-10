@@ -62,12 +62,21 @@ definitions:
         type: boolean
       passedCount:
         type: integer
+      points:
+        type: integer
       questions:
         items:
           $ref: '#/definitions/models.Question'
         type: array
       title:
         type: string
+    type: object
+  models.Submission:
+    properties:
+      answers:
+        type: string
+      points:
+        type: integer
     type: object
   models.SuccessResponse:
     properties:
@@ -117,41 +126,6 @@ info:
   title: Swagger Example API
   version: "1.0"
 paths:
-  /accountrecovery/{email}/{hash_pass}:
-    post:
-      parameters:
-      - description: User email
-        in: path
-        name: email
-        required: true
-        type: string
-      - description: User's hashed password
-        in: path
-        name: hash_pass
-        required: true
-        type: string
-      - description: New password
-        in: formData
-        name: password
-        required: true
-        type: string
-      - description: Confirm new password
-        in: formData
-        name: confirmPassword
-        required: true
-        type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/models.ErrorResponse'
-      summary: Account Recovery
-      tags:
-      - auth
   /forgot-password:
     post:
       parameters:
@@ -218,6 +192,55 @@ paths:
       - ApiKeyAuth: []
       tags:
       - Quiz
+  /quiz/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - Quiz
+  /quiz/admin:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: search
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - Quiz
   /quiz/admin/{id}:
     get:
       consumes:
@@ -256,6 +279,61 @@ paths:
         name: count
         required: true
         type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - Quiz
+  /quiz/submit/{id}:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.Submission'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - Quiz
+  /quiz/user:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: search
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
       responses:
         "200":
           description: OK
