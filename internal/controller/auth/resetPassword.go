@@ -17,7 +17,7 @@ import (
 // @Param		reset	body		models.Password	true	"Change password"
 // @Success	200		{object}	models.SuccessResponse
 // @Failure	400		{object}	models.ErrorResponse
-// @Router		/reset-password [post]
+// @Router		/user/reset-password [post]
 func (pc *AuthController) ResetPassword(c *gin.Context) {
 	userID := c.GetUint("userID")
 	var passwords models.Password
