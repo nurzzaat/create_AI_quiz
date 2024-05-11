@@ -2,6 +2,7 @@ package auth
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/nurzzaat/create_AI_quiz/internal/controller/tokenutil"
@@ -81,5 +82,5 @@ func (lc *AuthController) Signin(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, models.SuccessResponse{Result: accessToken})
+	c.JSON(http.StatusOK, models.SuccessResponse{Result: accessToken , Metadata: models.Properties{Properties1: strconv.Itoa(int(user.RoleID))}})
 }

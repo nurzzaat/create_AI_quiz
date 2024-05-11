@@ -27,6 +27,7 @@ create table question(
 create table variants(
 	questionid integer,
 	variant text default '',
+	orderid serial,
 	foreign key (questionid) references question(id) on delete cascade
 );
 create table results(

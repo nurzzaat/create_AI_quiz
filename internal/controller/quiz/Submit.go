@@ -8,15 +8,15 @@ import (
 	"github.com/nurzzaat/create_AI_quiz/internal/models"
 )
 
-// @Tags		Quiz
-// @Accept		json
-// @Produce	json
-// @Param		id	path	int	true	"id"
-// @Param		data	body	models.Submission	true	"data"
-// @Security	ApiKeyAuth
-// @Success	200		{object}	models.SuccessResponse
-// @Failure	default	{object}	models.ErrorResponse
-// @Router	/quiz/submit/{id} [post]
+//	@Tags		Student
+//	@Accept		json
+//	@Produce	json
+//	@Param		quizId		path	int					true	"quizId"
+//	@Param		data	body	models.Submission	true	"data"
+//	@Security	ApiKeyAuth
+//	@Success	200		{object}	models.SuccessResponse
+//	@Failure	default	{object}	models.ErrorResponse
+//	@Router		/quiz/submit/{quizId} [post]
 func (qc *QuizController) Submit(c *gin.Context) {
 	roleID := c.GetUint("roleID")
 	if roleID == 1 {
@@ -31,7 +31,7 @@ func (qc *QuizController) Submit(c *gin.Context) {
 		return
 	}
 	userID := c.GetUint("userID")
-	id, _ := strconv.Atoi(c.Param("id"))
+	quizId, _ := strconv.Atoi(c.Param("quizId"))
 
 	var submission models.Submission
 	if err := c.ShouldBind(&submission); err != nil {
@@ -46,7 +46,7 @@ func (qc *QuizController) Submit(c *gin.Context) {
 		return
 	}
 
-	err := qc.QuizRepository.Submit(c, id, userID , submission)
+	err := qc.QuizRepository.Submit(c, quizId, userID , submission)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{
 			Result: []models.ErrorDetail{

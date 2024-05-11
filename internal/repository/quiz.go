@@ -82,7 +82,7 @@ func (qr *QuizRepository) GetAllUser(c context.Context, userID uint, search stri
 	}
 	for rows.Next() {
 		quiz := models.Quiz{}
-		err := rows.Scan(&quiz.ID, &quiz.Title, &quiz.CountOfQuestion , &quiz.IsPassed , &quiz.Points)
+		err := rows.Scan(&quiz.ID, &quiz.Title, &quiz.CountOfQuestion, &quiz.IsPassed, &quiz.Points)
 		if err != nil {
 			return quizes, err
 		}
@@ -138,11 +138,11 @@ func (qr *QuizRepository) GetByIDUser(c context.Context, quizID int, userID uint
 	JOIN quizaccess qa ON q.id = qa.quizid
 	LEFT JOIN results r ON r.quizid = q.id AND r.userid = $1
 	WHERE qa.userid = $1 and q.id = $2`
-	
+
 	// query = `SELECT q.id, q.title, q.qcount , case when r.userid != 0 then true else false end , r.ball
 	// FROM quizes q , quizaccess qa , results r
 	// WHERE q.id = qa.quizid and qa.userid = $1 and r.userid = $1 and r.quizid = q.id and q.id = $2`
-	err := qr.db.QueryRow(c, query,userID, quizID).Scan(&quiz.ID, &quiz.Title, &quiz.CountOfQuestion , &quiz.IsPassed , &quiz.Points)
+	err := qr.db.QueryRow(c, query, userID, quizID).Scan(&quiz.ID, &quiz.Title, &quiz.CountOfQuestion, &quiz.IsPassed, &quiz.Points)
 	if err != nil {
 		return quiz, err
 	}
@@ -181,38 +181,120 @@ func (qr *QuizRepository) GetByIDUser(c context.Context, quizID int, userID uint
 
 func (qr *QuizRepository) Delete(c context.Context, quizID int) error {
 	query := `DELETE FROM quizes WHERE id = $1`
-	_ ,err := qr.db.Exec(c , query , quizID)
-	if err != nil{
+	_, err := qr.db.Exec(c, query, quizID)
+	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (qr *QuizRepository) Submit(c context.Context, quizID int, userID uint ,submission models.Submission) (error){
+func (qr *QuizRepository) Submit(c context.Context, quizID int, userID uint, submission models.Submission) error {
 	var isPermitted bool
 	checkQuery := `SELECT EXISTS (
 		SELECT 1
 		FROM quizaccess
 		WHERE userid = $1 AND quizid = $2
 	) AS result;`
-	if err := qr.db.QueryRow(c , checkQuery , userID, quizID).Scan(&isPermitted); err != nil{
+	if err := qr.db.QueryRow(c, checkQuery, userID, quizID).Scan(&isPermitted); err != nil {
 		return err
 	}
-	if !isPermitted{
+	if !isPermitted {
 		return errors.New("You are not permitted to submit this quiz")
 	}
 	query := `INSERT INTO results(
 		userid, quizid, answer, ball)
 		VALUES ($1, $2, $3, $4);`
-	_ , err := qr.db.Exec(c , query , userID , quizID , submission.Answers , submission.Points)
-	if err != nil{
+	_, err := qr.db.Exec(c, query, userID, quizID, submission.Answers, submission.Points)
+	if err != nil {
 		return err
 	}
 	updateQuery := `UPDATE quizes SET passed = passed + 1
 	WHERE id = $1;`
-	_ , err = qr.db.Exec(c , updateQuery , quizID )
-	if err != nil{
+	_, err = qr.db.Exec(c, updateQuery, quizID)
+	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (qr *QuizRepository) GetStudentsByQuizID(c context.Context, quizID int) ([]models.UserQuiz, error) {
+	users := []models.UserQuiz{}
+	query := `select u.id , u.email , u.firstname , u.lastname, r.ball , q.qcount 
+	FROM quizes q , users u , results r 
+	WHERE q.id = r.quizid and r.userid = u.id and q.id = $1`
+	rows, err := qr.db.Query(c, query, quizID)
+	if err != nil {
+		return users, err
+	}
+	for rows.Next() {
+		user := models.UserQuiz{}
+		count := 0
+		err := rows.Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.Point, &count)
+		if err != nil {
+			return users, err
+		}
+		if count != 0 {
+			user.Percent = 100 * user.Point / count
+		}
+		users = append(users, user)
+	}
+	return users, nil
+}
+
+func (qr *QuizRepository) AddStudentToQuiz(c context.Context, quizID int, userID int) error {
+	query := `INSERT INTO public.quizaccess(
+		quizid, userid)
+		VALUES ($1, $2);`
+	_, err := qr.db.Exec(c, query, quizID, userID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (qr *QuizRepository) GetStudentResult(c context.Context, quizID int, userID int) (models.StudentResult, error) {
+	result := models.StudentResult{}
+	count := 0
+	query := `select u.id , u.email , r.ball , q.qcount , r.answer
+	FROM quizes q , users u , results r 
+	WHERE q.id = r.quizid and r.userid = u.id and q.id = $1 and u.id = $2`
+	row := qr.db.QueryRow(c, query, quizID, userID)
+	err := row.Scan(&result.ID, &result.Email, &result.Point, &count, &result.Answers)
+	if err != nil {
+		return result, err
+	}
+	if count != 0{
+		result.Percent = 100 * result.Point / count
+	}
+	questions := []models.Question{}
+	questionQuery := `SELECT id, question FROM question where quizid = $1 order by orderid;`
+	rows, err := qr.db.Query(c, questionQuery, quizID)
+	if err != nil {
+		return result, err
+	}
+	for rows.Next() {
+		question := models.Question{}
+		err := rows.Scan(&question.ID, &question.Title)
+		if err != nil {
+			return result, err
+		}
+		variants := []models.Variant{}
+		variantsQuery := `SELECT variant FROM variants where questionid = $1 order by orderid;`
+		rowss, err := qr.db.Query(c, variantsQuery, question.ID)
+		if err != nil {
+			return result, err
+		}
+		for rowss.Next() {
+			variant := models.Variant{}
+			err := rowss.Scan(&variant.Title)
+			if err != nil {
+				return result, err
+			}
+			variants = append(variants, variant)
+		}
+		question.Variants = variants
+		questions = append(questions, question)
+	}
+	result.Questions = questions
+	return result, nil
 }

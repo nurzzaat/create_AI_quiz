@@ -7,31 +7,31 @@ import (
 	"github.com/nurzzaat/create_AI_quiz/internal/models"
 )
 
-// @Tags		Quiz
-// @Accept		json
-// @Produce	json
-// @Param		search	query	string	false	"search"
-// @Security	ApiKeyAuth
-// @Success	200		{object}	models.SuccessResponse
-// @Failure	default	{object}	models.ErrorResponse
-// @Router	/quiz/user [get]
-func (qc *QuizController) GetAllUser(c *gin.Context) {
+//	@Tags		Quiz
+//	@Accept		json
+//	@Produce	json
+//	@Param		search	query	string	false	"search"
+//	@Security	ApiKeyAuth
+//	@Success	200		{object}	models.SuccessResponse
+//	@Failure	default	{object}	models.ErrorResponse
+//	@Router		/quiz/admin [get]
+func (qc *QuizController) GetAllAdmin(c *gin.Context) {
 	roleID := c.GetUint("roleID")
-	if roleID == 1 {
+	if roleID == 2 {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{
 			Result: []models.ErrorDetail{
 				{
-					Code:    "User is required",
+					Code:    "Admin is required",
 					Message: "You are not admin user",
 				},
 			},
 		})
 		return
-	} 
+	}
 	userID := c.GetUint("userID")
 	search := `%` + c.Query("search") + `%`
 
-	quizes, err := qc.QuizRepository.GetAllUser(c, userID , search)
+	quizes, err := qc.QuizRepository.GetAllAdmin(c, userID , search)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{
 			Result: []models.ErrorDetail{

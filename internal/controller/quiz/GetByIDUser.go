@@ -8,14 +8,14 @@ import (
 	"github.com/nurzzaat/create_AI_quiz/internal/models"
 )
 
-// @Tags		Quiz
-// @Accept		json
-// @Produce	json
-// @Param		id	path	int	true	"id"
-// @Security	ApiKeyAuth
-// @Success	200		{object}	models.SuccessResponse
-// @Failure	default	{object}	models.ErrorResponse
-// @Router	/quiz/user/{id} [get]
+//	@Tags		Student
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	path	int	true	"id"
+//	@Security	ApiKeyAuth
+//	@Success	200		{object}	models.SuccessResponse
+//	@Failure	default	{object}	models.ErrorResponse
+//	@Router		/quiz/user/{id} [get]
 func (qc *QuizController) GetByIDUser(c *gin.Context) {
 	roleID := c.GetUint("roleID")
 	if roleID == 1 {

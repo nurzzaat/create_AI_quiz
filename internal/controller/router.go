@@ -51,20 +51,21 @@ func Setup(app pkg.Application, router *gin.Engine) {
 
 	quizRouter := router.Group("/quiz")
 	{
-		quizRouter.POST("" , quizController.Create)
-		quizRouter.POST("/generate" , quizController.Generate)
-		quizRouter.GET("/admin/:id" , quizController.GetByIDAdmin)
-		quizRouter.GET("/user/:id" , quizController.GetByIDUser)
-		quizRouter.GET("/admin" , quizController.GetAllAdmin)
-		quizRouter.GET("/user" , quizController.GetAllUser)
-		quizRouter.DELETE("/:id" , quizController.Delete)
+		quizRouter.POST("", quizController.Create)
+		quizRouter.POST("/generate", quizController.Generate)
+		quizRouter.GET("/admin/:id", quizController.GetByIDAdmin)
+		quizRouter.GET("/user/:id", quizController.GetByIDUser)
+		quizRouter.GET("/admin", quizController.GetAllAdmin)
+		quizRouter.GET("/user", quizController.GetAllUser)
+		quizRouter.DELETE("/:quizId", quizController.Delete)
 
-		quizRouter.POST("/submit/:id" , quizController.Submit )//submit student
+		quizRouter.POST("/submit/:quizId", quizController.Submit)
 	}
 	studentRouter := router.Group("/students")
 	{
-		studentRouter.GET("/:quizId")//get users by quiz id
+		studentRouter.GET("/:quizId", quizController.GetStudentsByQuizID)
+		studentRouter.POST("/quiz/:quizId/add/:studentId", quizController.AddStudentToQuiz)
+		studentRouter.DELETE("/quiz/:quizId/delete/:studentId")
+		studentRouter.GET("/quiz/:quizId/result" ,quizController.GetStudentResult)
 	}
-
-
 }

@@ -16,13 +16,13 @@ type QuizController struct {
 	QuizRepository models.QuizRepository
 }
 
-// @Tags		Quiz
-// @Param		text	formData	string	true	"text"
-// @Param		count	formData	string	true	"count"
-// @Security	ApiKeyAuth
-// @Success	200		{object}	models.SuccessResponse
-// @Failure	default	{object}	models.ErrorResponse
-// @Router	/quiz/generate [post]
+//	@Tags		Quiz
+//	@Param		text	formData	string	true	"text"
+//	@Param		count	formData	string	true	"count"
+//	@Security	ApiKeyAuth
+//	@Success	200		{object}	models.SuccessResponse
+//	@Failure	default	{object}	models.ErrorResponse
+//	@Router		/quiz/generate [post]
 func (qc *QuizController) Generate(c *gin.Context) {
 	roleID := c.GetUint("roleID")
 	if roleID == 2 {

@@ -8,7 +8,7 @@ type Quiz struct {
 	Questions       []Question `json:"questions"`
 	CountOfQuestion int        `json:"countOfQuestion"`
 	PassedCount     int        `json:"passedCount"`
-	IsPassed        bool        `json:"isPassed"`
+	IsPassed        bool       `json:"isPassed"`
 	Points          int        `json:"points"`
 }
 
@@ -27,6 +27,14 @@ type Submission struct {
 	Points  int    `json:"points"`
 	Answers string `json:"answers"`
 }
+type StudentResult struct {
+	ID        int        `json:"userId"`
+	Email     string     `json:"email"`
+	Questions []Question `json:"questions"`
+	Point     int        `json:"point"`
+	Answers   string     `json:"answers"`
+	Percent   int        `json:"percent"`
+}
 
 type QuizRepository interface {
 	Create(c context.Context, quiz Quiz, userID uint) (int, error)
@@ -37,4 +45,7 @@ type QuizRepository interface {
 	Delete(c context.Context, quizID int) error
 
 	Submit(c context.Context, quizID int, userID uint, submission Submission) error
+	GetStudentsByQuizID(c context.Context, quizID int) ([]UserQuiz, error)
+	AddStudentToQuiz(c context.Context, quizID int, userID int) error
+	GetStudentResult(c context.Context, quizID int, userID int) (StudentResult, error)
 }

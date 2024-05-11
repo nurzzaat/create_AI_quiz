@@ -30,6 +30,15 @@ type Password struct {
 	ConfirmPassword string `json:"confirmPassword"`
 }
 
+type UserQuiz struct {
+	ID        uint   `json:"id"`
+	Email     string `json:"email"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Point     int    `json:"point"`
+	Percent   int    `json:"percent"`
+}
+
 type UserRepository interface {
 	GetUserByEmail(c context.Context, email string) (User, error)
 	GetUserByID(c context.Context, userID int) (User, error)

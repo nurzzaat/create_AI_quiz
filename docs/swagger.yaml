@@ -192,14 +192,14 @@ paths:
       - ApiKeyAuth: []
       tags:
       - Quiz
-  /quiz/{id}:
+  /quiz/{quizId}:
     delete:
       consumes:
       - application/json
       parameters:
-      - description: id
+      - description: quizId
         in: path
-        name: id
+        name: quizId
         required: true
         type: integer
       produces:
@@ -292,14 +292,14 @@ paths:
       - ApiKeyAuth: []
       tags:
       - Quiz
-  /quiz/submit/{id}:
+  /quiz/submit/{quizId}:
     post:
       consumes:
       - application/json
       parameters:
-      - description: id
+      - description: quizId
         in: path
-        name: id
+        name: quizId
         required: true
         type: integer
       - description: data
@@ -322,7 +322,7 @@ paths:
       security:
       - ApiKeyAuth: []
       tags:
-      - Quiz
+      - Student
   /quiz/user:
     get:
       consumes:
@@ -346,7 +346,7 @@ paths:
       security:
       - ApiKeyAuth: []
       tags:
-      - Quiz
+      - Student
   /quiz/user/{id}:
     get:
       consumes:
@@ -371,7 +371,7 @@ paths:
       security:
       - ApiKeyAuth: []
       tags:
-      - Quiz
+      - Student
   /signin:
     post:
       consumes:
@@ -422,6 +422,86 @@ paths:
       summary: SignUp
       tags:
       - auth
+  /students/{quizId}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: quizId
+        in: path
+        name: quizId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - Quiz
+  /students/quiz/{quizId}/add/{studentId}:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: quizId
+        in: path
+        name: quizId
+        required: true
+        type: integer
+      - description: studentId
+        in: path
+        name: studentId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - Quiz
+  /students/quiz/{quizId}/result:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: quizId
+        in: path
+        name: quizId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - Student
   /user/profile:
     get:
       consumes:

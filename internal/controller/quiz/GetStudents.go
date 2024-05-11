@@ -15,8 +15,8 @@ import (
 //	@Security	ApiKeyAuth
 //	@Success	200		{object}	models.SuccessResponse
 //	@Failure	default	{object}	models.ErrorResponse
-//	@Router		/quiz/{quizId} [delete]
-func (qc *QuizController) Delete(c *gin.Context) {
+//	@Router		/students/{quizId} [get]
+func (qc *QuizController) GetStudentsByQuizID(c *gin.Context) {
 	roleID := c.GetUint("roleID")
 	if roleID == 2 {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{
@@ -29,14 +29,15 @@ func (qc *QuizController) Delete(c *gin.Context) {
 		})
 		return
 	}
-	id , _ := strconv.Atoi(c.Param("quizId"))
-	err := qc.QuizRepository.Delete(c , id)
-	if err != nil{
+	quizID , _ := strconv.Atoi(c.Param("quizId"))
+
+	users, err := qc.QuizRepository.GetStudentsByQuizID(c, quizID)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{
 			Result: []models.ErrorDetail{
 				{
-					Code:    "ERROR_DELETE_QUIZ",
-					Message: "Can't delete quiz",
+					Code:    "ERROR_GET_USERS",
+					Message: "Can't get users",
 					Metadata: models.Properties{
 						Properties1: err.Error(),
 					},
@@ -45,5 +46,5 @@ func (qc *QuizController) Delete(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(200 , models.SuccessResponse{Result: "Success"})
+	c.JSON(200, models.SuccessResponse{Result: users})
 }

@@ -245,7 +245,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/quiz/submit/{id}": {
+        "/quiz/submit/{quizId}": {
             "post": {
                 "security": [
                     {
@@ -259,13 +259,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Quiz"
+                    "Student"
                 ],
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "id",
-                        "name": "id",
+                        "description": "quizId",
+                        "name": "quizId",
                         "in": "path",
                         "required": true
                     },
@@ -309,7 +309,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Quiz"
+                    "Student"
                 ],
                 "parameters": [
                     {
@@ -349,7 +349,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Quiz"
+                    "Student"
                 ],
                 "parameters": [
                     {
@@ -376,7 +376,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/quiz/{id}": {
+        "/quiz/{quizId}": {
             "delete": {
                 "security": [
                     {
@@ -395,8 +395,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "id",
-                        "name": "id",
+                        "description": "quizId",
+                        "name": "quizId",
                         "in": "path",
                         "required": true
                     }
@@ -477,6 +477,136 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/models.UserRequest"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.SuccessResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/students/quiz/{quizId}/add/{studentId}": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Quiz"
+                ],
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "quizId",
+                        "name": "quizId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "studentId",
+                        "name": "studentId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.SuccessResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/students/quiz/{quizId}/result": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Student"
+                ],
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "quizId",
+                        "name": "quizId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.SuccessResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/students/{quizId}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Quiz"
+                ],
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "quizId",
+                        "name": "quizId",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {

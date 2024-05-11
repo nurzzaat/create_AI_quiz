@@ -8,35 +8,37 @@ import (
 	"github.com/nurzzaat/create_AI_quiz/internal/models"
 )
 
-//	@Tags		Quiz
+//	@Tags		Student
 //	@Accept		json
 //	@Produce	json
-//	@Param		quizId	path	int	true	"quizId"
+//	@Param		quizId		path	int	true	"quizId"
 //	@Security	ApiKeyAuth
 //	@Success	200		{object}	models.SuccessResponse
 //	@Failure	default	{object}	models.ErrorResponse
-//	@Router		/quiz/{quizId} [delete]
-func (qc *QuizController) Delete(c *gin.Context) {
+//	@Router		/students/quiz/{quizId}/result [get]
+func (qc *QuizController) GetStudentResult(c *gin.Context) {
 	roleID := c.GetUint("roleID")
-	if roleID == 2 {
+	if roleID == 1 {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{
 			Result: []models.ErrorDetail{
 				{
-					Code:    "Admin is required",
+					Code:    "User is required",
 					Message: "You are not admin user",
 				},
 			},
 		})
 		return
-	}
-	id , _ := strconv.Atoi(c.Param("quizId"))
-	err := qc.QuizRepository.Delete(c , id)
+	} 
+	quizId, _ := strconv.Atoi(c.Param("quizId"))
+	studentId := c.GetUint("userID")
+
+	result , err := qc.QuizRepository.GetStudentResult(c , quizId , int(studentId))
 	if err != nil{
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{
 			Result: []models.ErrorDetail{
 				{
-					Code:    "ERROR_DELETE_QUIZ",
-					Message: "Can't delete quiz",
+					Code:    "ERROR_GET_QUIZ",
+					Message: "Can't get quiz",
 					Metadata: models.Properties{
 						Properties1: err.Error(),
 					},
@@ -45,5 +47,5 @@ func (qc *QuizController) Delete(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(200 , models.SuccessResponse{Result: "Success"})
+	c.JSON(200 , models.SuccessResponse{Result: result})
 }
