@@ -40,19 +40,35 @@ func (qc *QuizController) Generate(c *gin.Context) {
 	text := c.PostForm("text")
 	count := c.PostForm("count")
 
-	content := fmt.Sprintf(`Help me to construct basic %v questions with 4 variants and at the end of each question show its answers for the next text:
-	%v. The result must be only in next array json form , no other texts are allowed
+	// content := fmt.Sprintf(`Help me to construct basic %v questions with 4 variants and at the end of each question show its answers for the next text:
+	// %v. The result must be only in next array json form , no other texts are allowed
+	// 		[
+    //             {
+    //                     "id": 1,
+    //                     "title": "How old is Nurzat?",
+    //                     "variants": [
+    //                             {"title": "17"},
+    //                             {"title": "19"},
+    //                             {"title": "21"},
+    //                             {"title": "23"}
+    //                     ],
+    //                     "correctAnswer": "19"
+    //             }
+	// 		]`, count, text)
+
+	content := fmt.Sprintf(`Помоги мне создать %v вопросов с 4 вариантами для следующего текста %v и в конце каждого вопроса должен быть правильный ответ на него 
+	Ответ должен быть как в следующем формате , позволено только массив json-ов , другие ответы не принимается.
 			[
                 {
                         "id": 1,
-                        "title": "How old is Nurzat?",
+                        "title": "Сколько лет Земле?",
                         "variants": [
-                                {"title": "17"},
-                                {"title": "19"},
-                                {"title": "21"},
-                                {"title": "23"}
+                                {"title": "17 млн"},
+                                {"title": "1 млрд"},
+                                {"title": "21 млрд"},
+                                {"title": "4.54 млрд"}
                         ],
-                        "correctAnswer": "19"
+                        "correctAnswer": "4.54 млрд"
                 }
 			]`, count, text)
 
