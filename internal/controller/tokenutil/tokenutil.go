@@ -98,6 +98,8 @@ func getTokenFromRequest(c *gin.Context) string {
 	bearerToken := c.Request.Header.Get("Authorization")
 	splitToken := strings.Split(bearerToken, " ")
 	fmt.Println(114)
+	fmt.Println(splitToken)
+	fmt.Println(bearerToken)
 	if len(splitToken) == 2 {
 		return splitToken[1]
 	}
