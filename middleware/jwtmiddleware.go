@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,6 +11,7 @@ import (
 
 func JWTAuth(secret string) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		fmt.Println(1)
 		err := tokenutil.ValidateJWT(c, secret)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, models.ErrorResponse{
@@ -26,6 +28,7 @@ func JWTAuth(secret string) gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		fmt.Println(2)
 		err = tokenutil.ValidateUserJWT(c, secret)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, models.ErrorResponse{

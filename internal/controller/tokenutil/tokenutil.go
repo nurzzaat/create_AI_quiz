@@ -49,10 +49,12 @@ func CreateRefreshToken(user *models.User, secret string, expiry int) (refreshTo
 }
 
 func ValidateJWT(c *gin.Context, secret string) error {
+	fmt.Println(11)
 	token, err := getToken(c, secret)
 	if err != nil {
 		return err
 	}
+	fmt.Println(12)
 	_, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
 		return nil
@@ -61,10 +63,12 @@ func ValidateJWT(c *gin.Context, secret string) error {
 }
 
 func ValidateUserJWT(c *gin.Context, secret string) error {
+	fmt.Println(21)
 	token, err := getToken(c, secret)
 	if err != nil {
 		return err
 	}
+	fmt.Println(22)
 	claims, ok := token.Claims.(jwt.MapClaims)
 	userRoleID := uint(claims["role"].(float64))
 	userID := uint(claims["id"].(float64))
@@ -77,8 +81,11 @@ func ValidateUserJWT(c *gin.Context, secret string) error {
 }
 
 func getToken(c *gin.Context, secret string) (*jwt.Token, error) {
+	fmt.Println(111)
 	tokenString := getTokenFromRequest(c)
+	fmt.Println(112)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		fmt.Println(113)
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
@@ -90,8 +97,10 @@ func getToken(c *gin.Context, secret string) (*jwt.Token, error) {
 func getTokenFromRequest(c *gin.Context) string {
 	bearerToken := c.Request.Header.Get("Authorization")
 	splitToken := strings.Split(bearerToken, " ")
+	fmt.Println(114)
 	if len(splitToken) == 2 {
 		return splitToken[1]
 	}
+	fmt.Println(1115)
 	return ""
 }
