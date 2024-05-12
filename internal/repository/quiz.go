@@ -274,7 +274,7 @@ func (qr *QuizRepository) GetStudentResult(c context.Context, quizID int, userID
 	if err != nil {
 		return result, err
 	}
-	if count != 0{
+	if count != 0 {
 		result.Percent = 100 * result.Point / count
 	}
 	questions := []models.Question{}
@@ -308,4 +308,27 @@ func (qr *QuizRepository) GetStudentResult(c context.Context, quizID int, userID
 	}
 	result.Questions = questions
 	return result, nil
+}
+
+func (qr *QuizRepository) GetPermittedStudentsByQuizID(c context.Context, quizID int) ([]models.User, error) {
+	users := []models.User{}
+
+	query := `SELECT u.id, u.email,  u.firstname , u.lastname 
+	FROM users u , quizaccess qa
+	where u.roleid = 2 and qa.userid = u.id and qa.quizid = $1`
+	rows, err := qr.db.Query(c, query , quizID)
+	if err != nil {
+		return users, err
+	}
+	for rows.Next() {
+		user := models.User{}
+		err := rows.Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName)
+		if err != nil {
+			return users, err
+		}
+		users = append(users, user)
+	}
+
+	return users, nil
+
 }

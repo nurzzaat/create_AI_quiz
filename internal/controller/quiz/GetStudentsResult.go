@@ -15,8 +15,8 @@ import (
 //	@Security	ApiKeyAuth
 //	@Success	200		{object}	models.SuccessResponse
 //	@Failure	default	{object}	models.ErrorResponse
-//	@Router		/students/{quizId} [get]
-func (qc *QuizController) GetPermittedStudentsByQuizID(c *gin.Context) {
+//	@Router		/students/{quizId}/result [get]
+func (qc *QuizController) GetStudentsByQuizID(c *gin.Context) {
 	roleID := c.GetUint("roleID")
 	if roleID == 2 {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{
@@ -31,7 +31,7 @@ func (qc *QuizController) GetPermittedStudentsByQuizID(c *gin.Context) {
 	}
 	quizID , _ := strconv.Atoi(c.Param("quizId"))
 
-	users, err := qc.QuizRepository.GetPermittedStudentsByQuizID(c, quizID)
+	users, err := qc.QuizRepository.GetStudentsByQuizID(c, quizID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{
 			Result: []models.ErrorDetail{

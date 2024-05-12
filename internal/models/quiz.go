@@ -46,6 +46,7 @@ type QuizRepository interface {
 
 	Submit(c context.Context, quizID int, userID uint, submission Submission) error
 	GetStudentsByQuizID(c context.Context, quizID int) ([]UserQuiz, error)
+	GetPermittedStudentsByQuizID(c context.Context, quizID int) ([]User, error)
 	AddStudentToQuiz(c context.Context, quizID int, userID int) error
 	DeleteStudentFromQuiz(c context.Context, quizID int, userID int) error
 	GetStudentResult(c context.Context, quizID int, userID int) (StudentResult, error)
