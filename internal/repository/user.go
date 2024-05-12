@@ -77,9 +77,9 @@ func (ur *UserRepository) GetUserByID(c context.Context, userID int) (models.Use
 func (ur *UserRepository) GetProfile(c context.Context, userID int) (models.User, error) {
 	user := models.User{}
 
-	query := `SELECT id, email,  firstname , lastname , createdat FROM users where id = $1`
+	query := `SELECT id, email,  firstname , lastname , createdat , roleid FROM users where id = $1`
 	row := ur.db.QueryRow(c, query, userID)
-	err := row.Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.CreatedAt)
+	err := row.Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.CreatedAt , &user.RoleID)
 
 	if err != nil {
 		return user, err
