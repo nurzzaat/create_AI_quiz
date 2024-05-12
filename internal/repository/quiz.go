@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"strings"
 
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/nurzzaat/create_AI_quiz/internal/models"
@@ -204,7 +205,7 @@ func (qr *QuizRepository) Submit(c context.Context, quizID int, userID uint, sub
 	query := `INSERT INTO results(
 		userid, quizid, answer, ball)
 		VALUES ($1, $2, $3, $4);`
-	_, err := qr.db.Exec(c, query, userID, quizID, submission.Answers, submission.Points)
+	_, err := qr.db.Exec(c, query, userID, quizID, submission.Answer, submission.Points)
 	if err != nil {
 		return err
 	}
@@ -266,14 +267,16 @@ func (qr *QuizRepository) DeleteStudentFromQuiz(c context.Context, quizID int, u
 func (qr *QuizRepository) GetStudentResult(c context.Context, quizID int, userID int) (models.StudentResult, error) {
 	result := models.StudentResult{}
 	count := 0
+	var answer string
 	query := `select u.id , u.email , r.ball , q.qcount , r.answer
 	FROM quizes q , users u , results r 
 	WHERE q.id = r.quizid and r.userid = u.id and q.id = $1 and u.id = $2`
 	row := qr.db.QueryRow(c, query, quizID, userID)
-	err := row.Scan(&result.ID, &result.Email, &result.Point, &count, &result.Answers)
+	err := row.Scan(&result.ID, &result.Email, &result.Point, &count, &answer)
 	if err != nil {
 		return result, err
 	}
+	result.Answers = strings.Split(answer , ",")
 	if count != 0 {
 		result.Percent = 100 * result.Point / count
 	}

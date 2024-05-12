@@ -74,7 +74,9 @@ definitions:
   models.Submission:
     properties:
       answers:
-        type: string
+        items:
+          type: string
+        type: array
       points:
         type: integer
     type: object

@@ -979,7 +979,10 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "answers": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "points": {
                     "type": "integer"

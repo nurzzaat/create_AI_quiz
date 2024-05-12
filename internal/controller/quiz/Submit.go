@@ -1,6 +1,7 @@
 package quiz
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -8,15 +9,15 @@ import (
 	"github.com/nurzzaat/create_AI_quiz/internal/models"
 )
 
-//	@Tags		Student
-//	@Accept		json
-//	@Produce	json
-//	@Param		quizId		path	int					true	"quizId"
-//	@Param		data	body	models.Submission	true	"data"
-//	@Security	ApiKeyAuth
-//	@Success	200		{object}	models.SuccessResponse
-//	@Failure	default	{object}	models.ErrorResponse
-//	@Router		/quiz/submit/{quizId} [post]
+// @Tags		Student
+// @Accept		json
+// @Produce	json
+// @Param		quizId		path	int					true	"quizId"
+// @Param		data	body	models.Submission	true	"data"
+// @Security	ApiKeyAuth
+// @Success	200		{object}	models.SuccessResponse
+// @Failure	default	{object}	models.ErrorResponse
+// @Router		/quiz/submit/{quizId} [post]
 func (qc *QuizController) Submit(c *gin.Context) {
 	roleID := c.GetUint("roleID")
 	if roleID == 1 {
@@ -46,7 +47,13 @@ func (qc *QuizController) Submit(c *gin.Context) {
 		return
 	}
 
-	err := qc.QuizRepository.Submit(c, quizId, userID , submission)
+	for _, answer := range submission.Answers {
+		submission.Answer += answer + `,`
+	}
+	submission.Answer = submission.Answer[:len(submission.Answer)-1]
+	fmt.Println(submission.Answer)
+
+	err := qc.QuizRepository.Submit(c, quizId, userID, submission)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{
 			Result: []models.ErrorDetail{
