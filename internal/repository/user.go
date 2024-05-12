@@ -91,7 +91,7 @@ func (ur *UserRepository) GetProfile(c context.Context, userID int) (models.User
 func (ur *UserRepository) GetAll(c context.Context) ([]models.User, error) {
 	users := []models.User{}
 
-	query := `SELECT id, email,  firstname , lastname , createdat FROM users`
+	query := `SELECT id, email,  firstname , lastname , createdat FROM users where roleid = 2`
 	rows, err := ur.db.Query(c, query)
 	if err != nil {
 		return users, err

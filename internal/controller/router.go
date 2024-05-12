@@ -63,7 +63,7 @@ func Setup(app pkg.Application, router *gin.Engine) {
 	}
 	studentRouter := router.Group("/students")
 	{
-		studentRouter.GET("" , quizController.GetAllUser)
+		studentRouter.GET("" , userController.GetAll)
 		studentRouter.GET("/:quizId", quizController.GetStudentsByQuizID)
 		studentRouter.POST("/quiz/:quizId/add/:studentId", quizController.AddStudentToQuiz)
 		studentRouter.DELETE("/quiz/:quizId/delete/:studentId", quizController.DeleteStudentFromQuiz)

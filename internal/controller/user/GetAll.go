@@ -14,7 +14,7 @@ import (
 // @Success	200		{object}	models.SuccessResponse
 // @Failure	default	{object}	models.ErrorResponse
 // @Router		/students [get]
-func (sc *UserController) GetProfile(c *gin.Context) {
+func (sc *UserController) GetAll(c *gin.Context) {
 	userID := c.GetUint("userID")
 
 	users, err := sc.UserRepository.GetProfile(c, int(userID))
