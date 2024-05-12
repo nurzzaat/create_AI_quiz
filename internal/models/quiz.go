@@ -24,16 +24,16 @@ type Variant struct {
 }
 
 type Submission struct {
-	Points  int              `json:"points"`
+	Points  int      `json:"points"`
 	Answers []string `json:"answers"`
-	Answer  string           `json:"-"`
+	Answer  string   `json:"-"`
 }
 type StudentResult struct {
 	ID        int        `json:"userId"`
 	Email     string     `json:"email"`
 	Questions []Question `json:"questions"`
 	Point     int        `json:"point"`
-	Answers   []string     `json:"answers"`
+	Answers   []string   `json:"answers"`
 	Percent   int        `json:"percent"`
 }
 
