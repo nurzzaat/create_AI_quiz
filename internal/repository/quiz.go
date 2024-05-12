@@ -219,9 +219,11 @@ func (qr *QuizRepository) Submit(c context.Context, quizID int, userID uint, sub
 
 func (qr *QuizRepository) GetStudentsByQuizID(c context.Context, quizID int) ([]models.UserQuiz, error) {
 	users := []models.UserQuiz{}
-	query := `select u.id , u.email , u.firstname , u.lastname, r.ball , q.qcount 
-	FROM quizes q , users u left join results r on r.quizid = q.id
-	WHERE r.userid = u.id and q.id = $1`
+	query := `SELECT u.id, u.email, u.firstname, u.lastname, COALESCE(r.ball, 0) AS ball, q.qcount
+	FROM quizes q
+	JOIN results r ON r.quizid = q.id
+	JOIN users u ON r.userid = u.id
+	WHERE q.id = $1;`
 	rows, err := qr.db.Query(c, query, quizID)
 	if err != nil {
 		return users, err

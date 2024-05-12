@@ -35,6 +35,7 @@ func main() {
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Access-Control-*, Cross-Origin-Resource-Policy , Origin, X-Requested-With, Content-Type, Accept")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "*")
 		if c.Request.Method == "OPTIONS" {
+			c.Writer.Header().Set("Access-Control-Allow-Headers", c.Request.Header.Get("Access-Control-Request-Headers"))
 			c.AbortWithStatus(http.StatusOK)
 			return
 		}
