@@ -11,12 +11,12 @@ import (
 //	@Tags		Quiz
 //	@Accept		json
 //	@Produce	json
-//	@Param		quizId		path	int	true	"quizId"
-//	@Param		studentId	path	int	true	"studentId"
+//	@Param		quizId		query	int	true	"quizId"
+//	@Param		studentId	query	int	true	"studentId"
 //	@Security	ApiKeyAuth
 //	@Success	200		{object}	models.SuccessResponse
 //	@Failure	default	{object}	models.ErrorResponse
-//	@Router		/students/quiz/{quizId}/add/{studentId} [post]
+//	@Router		/students/quiz/add [post]
 func (qc *QuizController) AddStudentToQuizPOST(c *gin.Context) {
 	roleID := c.GetUint("roleID")
 	if roleID == 2 {
@@ -30,8 +30,8 @@ func (qc *QuizController) AddStudentToQuizPOST(c *gin.Context) {
 		})
 		return
 	}
-	quizId, _ := strconv.Atoi(c.Param("quizId"))
-	studentId, _ := strconv.Atoi(c.Param("studentId"))
+	quizId, _ := strconv.Atoi(c.Query("quizId"))
+	studentId, _ := strconv.Atoi(c.Query("studentId"))
 
 	err := qc.QuizRepository.AddStudentToQuiz(c, quizId , studentId)
 	if err != nil {
