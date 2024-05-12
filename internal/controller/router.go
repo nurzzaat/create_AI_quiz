@@ -38,6 +38,8 @@ func Setup(app pkg.Application, router *gin.Engine) {
 	router.POST("/signup", loginController.Signup)
 	router.POST("/signin", loginController.Signin)
 	router.POST("/forgot-password", loginController.ForgotPassword)
+	router.POST("/students/quiz/add", quizController.AddStudentToQuizPOST)
+	router.PUT("/students/quiz/:quizId/add/:studentId", quizController.AddStudentToQuizPUT)
 
 	router.Use(middleware.JWTAuth(env.AccessTokenSecret))
 	router.POST("/logout", loginController.Logout)
@@ -66,8 +68,6 @@ func Setup(app pkg.Application, router *gin.Engine) {
 		studentRouter.GET("", userController.GetAll)
 		studentRouter.GET("/:quizId/result", quizController.GetStudentsByQuizID)
 		studentRouter.GET("/:quizId", quizController.GetPermittedStudentsByQuizID)
-		studentRouter.POST("/quiz/add", quizController.AddStudentToQuizPOST)
-		studentRouter.PUT("/quiz/:quizId/add/:studentId", quizController.AddStudentToQuizPUT)
 		studentRouter.DELETE("/quiz/:quizId/delete/:studentId", quizController.DeleteStudentFromQuiz)
 		studentRouter.GET("/quiz/:quizId/result", quizController.GetStudentResult)
 	}
