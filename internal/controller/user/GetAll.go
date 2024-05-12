@@ -15,9 +15,20 @@ import (
 // @Failure	default	{object}	models.ErrorResponse
 // @Router		/students [get]
 func (sc *UserController) GetAll(c *gin.Context) {
-	userID := c.GetUint("userID")
+	roleID := c.GetUint("roleID")
+	if roleID != 1 {
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{
+			Result: []models.ErrorDetail{
+				{
+					Code:    "Admin is required",
+					Message: "You are not admin user",
+				},
+			},
+		})
+		return
+	} 
 
-	users, err := sc.UserRepository.GetProfile(c, int(userID))
+	users, err := sc.UserRepository.GetAll(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{
 			Result: []models.ErrorDetail{
