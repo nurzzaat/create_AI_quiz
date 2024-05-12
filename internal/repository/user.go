@@ -22,7 +22,7 @@ func (ur *UserRepository) CreateUser(c context.Context, user models.UserRequest)
 	userQuery := `INSERT INTO users(
 		email, password, firstname, lastname, createdat , roleid)
 		VALUES ($1, $2, $3, $4, $5 , $6) returning id;`
-	err := ur.db.QueryRow(c, userQuery, user.Email, user.Password,user.FirstName , user.LastName, currentTime, user.RoleID).Scan(&userID)
+	err := ur.db.QueryRow(c, userQuery, user.Email, user.Password, user.FirstName, user.LastName, currentTime, user.RoleID).Scan(&userID)
 	if err != nil {
 
 		return 0, err
@@ -86,6 +86,26 @@ func (ur *UserRepository) GetProfile(c context.Context, userID int) (models.User
 	}
 
 	return user, nil
+}
+
+func (ur *UserRepository) GetAll(c context.Context) ([]models.User, error) {
+	users := []models.User{}
+
+	query := `SELECT id, email,  firstname , lastname , createdat FROM users`
+	rows, err := ur.db.Query(c, query)
+	if err != nil {
+		return users, err
+	}
+	for rows.Next() {
+		user := models.User{}
+		err := rows.Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.CreatedAt)
+		if err != nil {
+			return users, err
+		}
+		users = append(users, user)
+	}
+
+	return users, nil
 }
 
 func (ur *UserRepository) SetUserPassword(c context.Context, password string, userID int) error {

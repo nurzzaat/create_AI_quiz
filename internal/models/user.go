@@ -43,6 +43,7 @@ type UserRepository interface {
 	GetUserByEmail(c context.Context, email string) (User, error)
 	GetUserByID(c context.Context, userID int) (User, error)
 	GetProfile(c context.Context, userID int) (User, error)
+	GetAll(c context.Context) ([]User, error)
 
 	CreateUser(c context.Context, user UserRequest) (int, error)
 	EditUser(c context.Context, user User) (int, error)

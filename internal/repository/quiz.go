@@ -220,8 +220,8 @@ func (qr *QuizRepository) Submit(c context.Context, quizID int, userID uint, sub
 func (qr *QuizRepository) GetStudentsByQuizID(c context.Context, quizID int) ([]models.UserQuiz, error) {
 	users := []models.UserQuiz{}
 	query := `select u.id , u.email , u.firstname , u.lastname, r.ball , q.qcount 
-	FROM quizes q , users u , results r 
-	WHERE q.id = r.quizid and r.userid = u.id and q.id = $1`
+	FROM quizes q , users u left join results r on r.quizid = q.id
+	WHERE r.userid = u.id and q.id = $1`
 	rows, err := qr.db.Query(c, query, quizID)
 	if err != nil {
 		return users, err
@@ -245,6 +245,15 @@ func (qr *QuizRepository) AddStudentToQuiz(c context.Context, quizID int, userID
 	query := `INSERT INTO public.quizaccess(
 		quizid, userid)
 		VALUES ($1, $2);`
+	_, err := qr.db.Exec(c, query, quizID, userID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (qr *QuizRepository) DeleteStudentFromQuiz(c context.Context, quizID int, userID int) error {
+	query := `DELETE FROM quizaccess WHERE quizid = $1 and userid = $2`
 	_, err := qr.db.Exec(c, query, quizID, userID)
 	if err != nil {
 		return err

@@ -422,6 +422,25 @@ paths:
       summary: SignUp
       tags:
       - auth
+  /students:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - User
   /students/{quizId}:
     get:
       consumes:
@@ -449,6 +468,36 @@ paths:
       - Quiz
   /students/quiz/{quizId}/add/{studentId}:
     post:
+      consumes:
+      - application/json
+      parameters:
+      - description: quizId
+        in: path
+        name: quizId
+        required: true
+        type: integer
+      - description: studentId
+        in: path
+        name: studentId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - Quiz
+  /students/quiz/{quizId}/delete/{studentId}:
+    delete:
       consumes:
       - application/json
       parameters:
