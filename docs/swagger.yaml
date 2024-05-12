@@ -494,35 +494,6 @@ paths:
       tags:
       - Quiz
   /students/quiz/{quizId}/add/{studentId}:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: quizId
-        in: path
-        name: quizId
-        required: true
-        type: integer
-      - description: studentId
-        in: path
-        name: studentId
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.SuccessResponse'
-        default:
-          description: ""
-          schema:
-            $ref: '#/definitions/models.ErrorResponse'
-      security:
-      - ApiKeyAuth: []
-      tags:
-      - Quiz
     put:
       consumes:
       - application/json
@@ -607,6 +578,36 @@ paths:
       - ApiKeyAuth: []
       tags:
       - Student
+  /students/quiz/add:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: quizId
+        in: query
+        name: quizId
+        required: true
+        type: integer
+      - description: studentId
+        in: query
+        name: studentId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - Quiz
   /user/profile:
     get:
       consumes:

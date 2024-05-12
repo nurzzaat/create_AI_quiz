@@ -527,8 +527,8 @@ const docTemplate = `{
                 }
             }
         },
-        "/students/quiz/{quizId}/add/{studentId}": {
-            "put": {
+        "/students/quiz/add": {
+            "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -548,14 +548,14 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "quizId",
                         "name": "quizId",
-                        "in": "path",
+                        "in": "query",
                         "required": true
                     },
                     {
                         "type": "integer",
                         "description": "studentId",
                         "name": "studentId",
-                        "in": "path",
+                        "in": "query",
                         "required": true
                     }
                 ],
@@ -573,8 +573,10 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
-            "post": {
+            }
+        },
+        "/students/quiz/{quizId}/add/{studentId}": {
+            "put": {
                 "security": [
                     {
                         "ApiKeyAuth": []
