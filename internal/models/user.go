@@ -37,6 +37,7 @@ type UserQuiz struct {
 	LastName  string `json:"lastName"`
 	Point     int    `json:"point"`
 	Percent   int    `json:"percent"`
+	Timer string `json:"timer"`
 }
 
 type UserRepository interface {

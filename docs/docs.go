@@ -1018,6 +1018,9 @@ const docTemplate = `{
                         "$ref": "#/definitions/models.Question"
                     }
                 },
+                "speciality": {
+                    "type": "string"
+                },
                 "title": {
                     "type": "string"
                 }
@@ -1034,6 +1037,9 @@ const docTemplate = `{
                 },
                 "points": {
                     "type": "integer"
+                },
+                "timer": {
+                    "type": "string"
                 }
             }
         },

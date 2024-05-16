@@ -10,6 +10,7 @@ type Quiz struct {
 	PassedCount     int        `json:"passedCount"`
 	IsPassed        bool       `json:"isPassed"`
 	Points          int        `json:"points"`
+	Speciality      string     `json:"speciality"`
 }
 
 type Question struct {
@@ -27,6 +28,7 @@ type Submission struct {
 	Points  int      `json:"points"`
 	Answers []string `json:"answers"`
 	Answer  string   `json:"-"`
+	Timer   string   `json:"timer"`
 }
 type StudentResult struct {
 	ID        int        `json:"userId"`
@@ -35,6 +37,7 @@ type StudentResult struct {
 	Point     int        `json:"point"`
 	Answers   []string   `json:"answers"`
 	Percent   int        `json:"percent"`
+	Timer     string     `json:"timer"`
 }
 
 type QuizRepository interface {

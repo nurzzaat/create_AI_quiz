@@ -20,9 +20,9 @@ func NewQuizRepository(db *pgxpool.Pool) models.QuizRepository {
 func (qr *QuizRepository) Create(c context.Context, quiz models.Quiz, userID uint) (int, error) {
 	var id int
 	query := `INSERT INTO quizes(
-		userid, title, qcount)
-		VALUES ($1, $2, $3) returning id;`
-	err := qr.db.QueryRow(c, query, userID, quiz.Title, quiz.CountOfQuestion).Scan(&id)
+		userid, title, qcount , speciality)
+		VALUES ($1, $2, $3 , $4) returning id;`
+	err := qr.db.QueryRow(c, query, userID, quiz.Title, quiz.CountOfQuestion, quiz.Speciality).Scan(&id)
 	if err != nil {
 		return 0, err
 	}
@@ -51,7 +51,7 @@ func (qr *QuizRepository) Create(c context.Context, quiz models.Quiz, userID uin
 
 func (qr *QuizRepository) GetAllAdmin(c context.Context, userID uint, search string) ([]models.Quiz, error) {
 	quizes := []models.Quiz{}
-	query := `SELECT id, title, qcount, passed FROM quizes where userid = $1 and title ilike $2`
+	query := `SELECT id, title, qcount, passed , speciality FROM quizes where userid = $1 and title ilike $2`
 
 	rows, err := qr.db.Query(c, query, userID, search)
 	if err != nil {
@@ -59,7 +59,7 @@ func (qr *QuizRepository) GetAllAdmin(c context.Context, userID uint, search str
 	}
 	for rows.Next() {
 		quiz := models.Quiz{}
-		err := rows.Scan(&quiz.ID, &quiz.Title, &quiz.CountOfQuestion, &quiz.PassedCount)
+		err := rows.Scan(&quiz.ID, &quiz.Title, &quiz.CountOfQuestion, &quiz.PassedCount, &quiz.Speciality)
 		if err != nil {
 			return quizes, err
 		}
@@ -71,7 +71,7 @@ func (qr *QuizRepository) GetAllAdmin(c context.Context, userID uint, search str
 
 func (qr *QuizRepository) GetAllUser(c context.Context, userID uint, search string) ([]models.Quiz, error) {
 	quizes := []models.Quiz{}
-	query := `SELECT q.id, q.title, q.qcount, CASE WHEN r.userid != 0 THEN true ELSE false END AS passed , coalesce(r.ball, -1)
+	query := `SELECT q.id, q.title, q.qcount , q.speciality, CASE WHEN r.userid != 0 THEN true ELSE false END AS passed , coalesce(r.ball, -1)
 				FROM quizes q
 				JOIN quizaccess qa ON q.id = qa.quizid
 				LEFT JOIN results r ON r.quizid = q.id AND r.userid = $1
@@ -83,7 +83,7 @@ func (qr *QuizRepository) GetAllUser(c context.Context, userID uint, search stri
 	}
 	for rows.Next() {
 		quiz := models.Quiz{}
-		err := rows.Scan(&quiz.ID, &quiz.Title, &quiz.CountOfQuestion, &quiz.IsPassed, &quiz.Points)
+		err := rows.Scan(&quiz.ID, &quiz.Title, &quiz.CountOfQuestion, &quiz.Speciality, &quiz.IsPassed, &quiz.Points)
 		if err != nil {
 			return quizes, err
 		}
@@ -94,8 +94,8 @@ func (qr *QuizRepository) GetAllUser(c context.Context, userID uint, search stri
 
 func (qr *QuizRepository) GetByIDAdmin(c context.Context, quizID int) (models.Quiz, error) {
 	quiz := models.Quiz{}
-	query := `SELECT id, title, qcount, passed FROM quizes where id = $1;`
-	err := qr.db.QueryRow(c, query, quizID).Scan(&quiz.ID, &quiz.Title, &quiz.CountOfQuestion, &quiz.PassedCount)
+	query := `SELECT id, title, qcount , speciality, passed FROM quizes where id = $1;`
+	err := qr.db.QueryRow(c, query, quizID).Scan(&quiz.ID, &quiz.Title, &quiz.CountOfQuestion, &quiz.Speciality, &quiz.PassedCount)
 	if err != nil {
 		return quiz, err
 	}
@@ -134,7 +134,7 @@ func (qr *QuizRepository) GetByIDAdmin(c context.Context, quizID int) (models.Qu
 
 func (qr *QuizRepository) GetByIDUser(c context.Context, quizID int, userID uint) (models.Quiz, error) {
 	quiz := models.Quiz{}
-	query := `SELECT q.id, q.title, q.qcount, CASE WHEN r.userid != 0 THEN true ELSE false END AS passed , coalesce(r.ball, -1)
+	query := `SELECT q.id, q.title, q.qcount,q.speciality, CASE WHEN r.userid != 0 THEN true ELSE false END AS passed , coalesce(r.ball, -1)
 	FROM quizes q
 	JOIN quizaccess qa ON q.id = qa.quizid
 	LEFT JOIN results r ON r.quizid = q.id AND r.userid = $1
@@ -143,7 +143,7 @@ func (qr *QuizRepository) GetByIDUser(c context.Context, quizID int, userID uint
 	// query = `SELECT q.id, q.title, q.qcount , case when r.userid != 0 then true else false end , r.ball
 	// FROM quizes q , quizaccess qa , results r
 	// WHERE q.id = qa.quizid and qa.userid = $1 and r.userid = $1 and r.quizid = q.id and q.id = $2`
-	err := qr.db.QueryRow(c, query, userID, quizID).Scan(&quiz.ID, &quiz.Title, &quiz.CountOfQuestion, &quiz.IsPassed, &quiz.Points)
+	err := qr.db.QueryRow(c, query, userID, quizID).Scan(&quiz.ID, &quiz.Title, &quiz.CountOfQuestion, &quiz.Speciality, &quiz.IsPassed, &quiz.Points)
 	if err != nil {
 		return quiz, err
 	}
@@ -203,9 +203,9 @@ func (qr *QuizRepository) Submit(c context.Context, quizID int, userID uint, sub
 		return errors.New("You are not permitted to submit this quiz")
 	}
 	query := `INSERT INTO results(
-		userid, quizid, answer, ball)
-		VALUES ($1, $2, $3, $4);`
-	_, err := qr.db.Exec(c, query, userID, quizID, submission.Answer, submission.Points)
+		userid, quizid, answer, ball , timer)
+		VALUES ($1, $2, $3, $4 , $5);`
+	_, err := qr.db.Exec(c, query, userID, quizID, submission.Answer, submission.Points, submission.Timer)
 	if err != nil {
 		return err
 	}
@@ -220,7 +220,7 @@ func (qr *QuizRepository) Submit(c context.Context, quizID int, userID uint, sub
 
 func (qr *QuizRepository) GetStudentsByQuizID(c context.Context, quizID int) ([]models.UserQuiz, error) {
 	users := []models.UserQuiz{}
-	query := `SELECT u.id, u.email, u.firstname, u.lastname, COALESCE(r.ball, 0) AS ball, q.qcount
+	query := `SELECT u.id, u.email, u.firstname, u.lastname, COALESCE(r.ball, 0) AS ball,r.timer, q.qcount
 	FROM quizes q
 	JOIN results r ON r.quizid = q.id
 	JOIN users u ON r.userid = u.id
@@ -232,7 +232,7 @@ func (qr *QuizRepository) GetStudentsByQuizID(c context.Context, quizID int) ([]
 	for rows.Next() {
 		user := models.UserQuiz{}
 		count := 0
-		err := rows.Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.Point, &count)
+		err := rows.Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.Point, &user.Timer, &count)
 		if err != nil {
 			return users, err
 		}
@@ -268,15 +268,15 @@ func (qr *QuizRepository) GetStudentResult(c context.Context, quizID int, userID
 	result := models.StudentResult{}
 	count := 0
 	var answer string
-	query := `select u.id , u.email , r.ball , q.qcount , r.answer
+	query := `select u.id , u.email , r.ball , q.qcount , r.answer , r.timer
 	FROM quizes q , users u , results r 
 	WHERE q.id = r.quizid and r.userid = u.id and q.id = $1 and u.id = $2`
 	row := qr.db.QueryRow(c, query, quizID, userID)
-	err := row.Scan(&result.ID, &result.Email, &result.Point, &count, &answer)
+	err := row.Scan(&result.ID, &result.Email, &result.Point, &count, &answer, &result.Timer)
 	if err != nil {
 		return result, err
 	}
-	result.Answers = strings.Split(answer , ",")
+	result.Answers = strings.Split(answer, ",")
 	if count != 0 {
 		result.Percent = 100 * result.Point / count
 	}
@@ -319,7 +319,7 @@ func (qr *QuizRepository) GetPermittedStudentsByQuizID(c context.Context, quizID
 	query := `SELECT u.id, u.email,  u.firstname , u.lastname 
 	FROM users u , quizaccess qa
 	where u.roleid = 2 and qa.userid = u.id and qa.quizid = $1`
-	rows, err := qr.db.Query(c, query , quizID)
+	rows, err := qr.db.Query(c, query, quizID)
 	if err != nil {
 		return users, err
 	}

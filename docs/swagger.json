@@ -1012,6 +1012,9 @@
                         "$ref": "#/definitions/models.Question"
                     }
                 },
+                "speciality": {
+                    "type": "string"
+                },
                 "title": {
                     "type": "string"
                 }
@@ -1028,6 +1031,9 @@
                 },
                 "points": {
                     "type": "integer"
+                },
+                "timer": {
+                    "type": "string"
                 }
             }
         },
