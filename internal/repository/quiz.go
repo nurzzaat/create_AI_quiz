@@ -20,9 +20,9 @@ func NewQuizRepository(db *pgxpool.Pool) models.QuizRepository {
 func (qr *QuizRepository) Create(c context.Context, quiz models.Quiz, userID uint) (int, error) {
 	var id int
 	query := `INSERT INTO quizes(
-		userid, title, qcount , speciality)
-		VALUES ($1, $2, $3 , $4) returning id;`
-	err := qr.db.QueryRow(c, query, userID, quiz.Title, quiz.CountOfQuestion, quiz.Speciality).Scan(&id)
+		userid, title, qcount , speciality , timer)
+		VALUES ($1, $2, $3 , $4 , $5) returning id;`
+	err := qr.db.QueryRow(c, query, userID, quiz.Title, quiz.CountOfQuestion, quiz.Speciality, quiz.Timer).Scan(&id)
 	if err != nil {
 		return 0, err
 	}
@@ -94,8 +94,8 @@ func (qr *QuizRepository) GetAllUser(c context.Context, userID uint, search stri
 
 func (qr *QuizRepository) GetByIDAdmin(c context.Context, quizID int) (models.Quiz, error) {
 	quiz := models.Quiz{}
-	query := `SELECT id, title, qcount , speciality, passed FROM quizes where id = $1;`
-	err := qr.db.QueryRow(c, query, quizID).Scan(&quiz.ID, &quiz.Title, &quiz.CountOfQuestion, &quiz.Speciality, &quiz.PassedCount)
+	query := `SELECT id, title, qcount , speciality, passed , timer FROM quizes where id = $1;`
+	err := qr.db.QueryRow(c, query, quizID).Scan(&quiz.ID, &quiz.Title, &quiz.CountOfQuestion, &quiz.Speciality, &quiz.PassedCount , &quiz.Timer)
 	if err != nil {
 		return quiz, err
 	}
@@ -134,7 +134,7 @@ func (qr *QuizRepository) GetByIDAdmin(c context.Context, quizID int) (models.Qu
 
 func (qr *QuizRepository) GetByIDUser(c context.Context, quizID int, userID uint) (models.Quiz, error) {
 	quiz := models.Quiz{}
-	query := `SELECT q.id, q.title, q.qcount,q.speciality, CASE WHEN r.userid != 0 THEN true ELSE false END AS passed , coalesce(r.ball, -1)
+	query := `SELECT q.id, q.title, q.timer ,q.qcount,q.speciality, CASE WHEN r.userid != 0 THEN true ELSE false END AS passed , coalesce(r.ball, -1)
 	FROM quizes q
 	JOIN quizaccess qa ON q.id = qa.quizid
 	LEFT JOIN results r ON r.quizid = q.id AND r.userid = $1
@@ -143,7 +143,7 @@ func (qr *QuizRepository) GetByIDUser(c context.Context, quizID int, userID uint
 	// query = `SELECT q.id, q.title, q.qcount , case when r.userid != 0 then true else false end , r.ball
 	// FROM quizes q , quizaccess qa , results r
 	// WHERE q.id = qa.quizid and qa.userid = $1 and r.userid = $1 and r.quizid = q.id and q.id = $2`
-	err := qr.db.QueryRow(c, query, userID, quizID).Scan(&quiz.ID, &quiz.Title, &quiz.CountOfQuestion, &quiz.Speciality, &quiz.IsPassed, &quiz.Points)
+	err := qr.db.QueryRow(c, query, userID, quizID).Scan(&quiz.ID, &quiz.Title,&quiz.Timer, &quiz.CountOfQuestion, &quiz.Speciality, &quiz.IsPassed, &quiz.Points)
 	if err != nil {
 		return quiz, err
 	}

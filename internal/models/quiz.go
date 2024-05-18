@@ -11,6 +11,7 @@ type Quiz struct {
 	IsPassed        bool       `json:"isPassed"`
 	Points          int        `json:"points"`
 	Speciality      string     `json:"speciality"`
+	Timer           string     `json:"timer"`
 }
 
 type Question struct {

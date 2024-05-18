@@ -1021,6 +1021,9 @@ const docTemplate = `{
                 "speciality": {
                     "type": "string"
                 },
+                "timer": {
+                    "type": "string"
+                },
                 "title": {
                     "type": "string"
                 }
